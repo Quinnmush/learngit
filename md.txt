@@ -29,3 +29,8 @@
 	$ git reset --hard HEAD~100	//退回到前第100个版本
 	$ git reset --hard 935c2	//通过版本号切换版本
 	$ git reflog	//记录你的每一次命令
+	$ git checkout -- readme.txt	//丢弃相较于缓冲区的工作区的修改
+	$ git reset HEAD readme.txt	//将提交的缓存区的修改退回到工作区
+	
+	(删除)
+	$ git rm	//删除文件
