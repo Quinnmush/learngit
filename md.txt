@@ -39,4 +39,4 @@
 	$ ssh-keygen -t rsa -C "18257173@qq.com"	//创建SSH Key
 	$ git remote add origin git@github.com:Quinnmush/learngit.git	//链接github
 	$ git remote rm origin	//清除链接
-	$ git push -u origin master		//把本地库的内容推送到远程库上
+	$ git push -u origin master		//把本地库的内容推送到远程库上	-u首次链接时添加
