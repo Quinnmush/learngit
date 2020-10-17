@@ -40,3 +40,77 @@
 	$ git remote add origin git@github.com:Quinnmush/learngit.git	//链接github
 	$ git remote rm origin	//清除链接
 	$ git push -u origin master		//把本地库的内容推送到远程库上	-u首次链接时添加
+	$ git clone git@github.com:Quinnmush/learngit.git	//从远程库克隆learngit.git
+	
+	(分支)
+	$ git checkout -b dev	//创建并跳转到dev分支 -b表示创建并跳转
+	相当于:
+		$ git branch dev	//创建分支
+		$ git checkout dev	//切换分支
+	$ git branch	//查看分支列表, 当前分支前面会标一个 * 号
+	$ git merge dev	//合并指定分支到当前分支上
+	$ git branch -d dev	//删除分支
+	$ git switch -c dev //创建并切换到指定分支 (更科学的写法)
+	$ git switch master	//切换分支
+	
+	当Git无法自动合并分支时，就必须首先解决冲突。解决冲突后，再提交，合并完成。
+	解决冲突就是把Git合并失败的文件手动编辑为我们希望的内容，再提交。
+	$ git log --graph	//查看分支合并图
+	
+	禁用Fast forward模式:
+		$ git merge --no-ff -master "merge with no-ff" dev
+		--no-ff	//禁用Fast forward模式
+		-m	//添加说明
+		
+	(bug分支)
+	出现紧急bug时:
+		$ git stash	//把当前工作现场保存起来
+	首先确定要在哪个分支上修复bug，假定需要在master分支上修复，
+	就从master创建临时分支：
+		$ git checkout master
+		$ git checkout -b issue-101
+	修复完成后,切换到master分支,并完成合并,最后删除issue-101分支
+	$ git stash list	//查看存储列表
+	恢复工作现场:
+		$ git stash apply stash@{0}	//恢复后stash内容不会删除
+		$ git stash pop	//恢复后删除stash内容
+	同样的bug在dev分支上也存在:
+		$ git checkout dev	//切换到dev分支
+		$ git cherry-pick 4c805e2	//复制之前bug修复的提交到当前分支
+		
+	(feature分支)
+	如果要丢弃一个没有被合并过的分支，可以通过
+		$ git branch -D <name>	强行删除
+		
+	(多人协作)
+	$ git remote	//查看远程库信息
+	$ git remote -v	//查看详细信息
+	当其他人从远程库clone时，默认情况下，你的小伙伴只能看到本地的master分支。
+	其他人要在dev分支上开发，就必须创建远程origin的dev分支到本地
+		$ git checkout -b dev origin/dev
+	当其他人向origin/dev分支推送了他的提交,碰巧你也对同样的文件做了修改,
+	并试图推送,会推送失败。
+	此时就要先把最新的提交抓下来,然后在本地合并，解决冲突，再推送：
+		$ git pull
+	若抓取失败了,是因为没有指定本地dev分支与远程origin/dev分支的链接:
+		$ git branch --set-upstream-to=origin/dev dev
+	  再$ git pull
+	  
+	$ git rebase	//把分叉的提交历史“整理”成一条直线，看上去更直观,
+					  缺点是本地的分叉提交已经被修改过了。
+					  
+	(标签)
+	$ git tag v1.0	//创建标签
+	$ git tag	//查看所有标签
+	默认标签是打在最新提交的commit上的。
+	$ git tag v0.9 <commit id>	//通过commit id打标签
+	$ git show v0.9	//查看标签信息
+	$ git tag -a v0.1 -m "version 0.1 released" 1094adb	//-a 指定标签名
+	$ git tag -d v0.1	//删除标签
+	$ git push origin --tags	//推送所有标签到远程库
+	$ git push origin v1.0	//推送指定标签到远程库
+	如果标签已经推送到远程，要删除远程标签就麻烦一点，先从本地删除：
+		$ git tag -d v0.9
+	然后，从远程删除。删除命令也是push，但是格式如下：
+		$ git push origin :refs/tags/v0.9
+		
